@@ -10,6 +10,16 @@ namespace Parser {
         return result;
     }
 
+    Options::Options(
+            std::vector<std::vector<std::string>> custom_options
+    ) {
+        Options::_keys.clear();
+
+        for (const std::vector<std::string> &opt : custom_options) {
+            Options::_keys.push_back(opt);
+        }
+    }
+
     Options::Options(const int argc, char *argv[]) {
         for (int i = 0; i < Options::_keys.size(); i++) {
             Options::options[Options::_keys[i][0]] = 0;

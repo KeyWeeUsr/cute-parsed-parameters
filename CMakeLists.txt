@@ -43,3 +43,4 @@ endmacro()
 
 # tests
 test(longparameters)
+test(setparameters)

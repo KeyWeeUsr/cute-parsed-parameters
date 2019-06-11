@@ -19,6 +19,7 @@ namespace Parser {
         };
 
     public:
+        Options(std::vector<std::vector<std::string>> options);
         Options(const int argc, char *argv[]);
         std::vector<std::string> keys(void);
         std::unordered_map<std::string, int> all_options(void);
