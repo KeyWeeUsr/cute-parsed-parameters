@@ -11,6 +11,7 @@ namespace Parser {
     }
 
     Options::Options(
+            const int argc, char *argv[],
             std::vector<std::vector<std::string>> custom_options
     ) {
         Options::_keys.clear();
@@ -44,6 +45,9 @@ namespace Parser {
                     Options::options[Options::_keys[j][0]] = 1;
             }
         }
+    }
+
+    Options::Options(const int argc, char *argv[]) {
     }
 
     std::vector<std::string> Options::keys(void) {
