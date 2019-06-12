@@ -12,15 +12,9 @@ namespace Parser {
     class Options {
     private:
         std::unordered_map<std::string, int> options;
-        std::vector<std::vector<std::string>> _keys = {
-            {"help", "h"},
-            {"lines", "l"},
-            {"chars", "c"}
-        };
+        std::vector<std::vector<std::string>> _keys = {};
 
     public:
-        Options(std::vector<std::vector<std::string>> options);
-        Options(const int argc, char *argv[]);
         Options(
             const int argc, char *argv[],
             std::vector<std::vector<std::string>> custom_options

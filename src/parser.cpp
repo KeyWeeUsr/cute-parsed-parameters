@@ -24,16 +24,6 @@ namespace Parser {
         Options::set_options(argc, argv);
     }
 
-    Options::Options(
-            std::vector<std::vector<std::string>> custom_options
-    ) {
-        Options::_keys.clear();
-
-        for (const std::vector<std::string> &opt : custom_options) {
-            Options::_keys.push_back(opt);
-        }
-    }
-
     void Options::set_options(const int argc, char *argv[]) {
         std::string value;
         for (int i = 1; i < argc; i++) {
@@ -64,11 +54,6 @@ namespace Parser {
                 }
             }
         }
-    }
-
-    Options::Options(const int argc, char *argv[]) {
-        Options::options.clear();
-        Options::set_options(argc, argv);
     }
 
     std::vector<std::string> Options::keys(void) {
