@@ -1,6 +1,4 @@
-#include <vector>
 #include <assert.h>
-#include <unordered_map>
 
 #include "parser.h"
 
@@ -16,25 +14,65 @@ int main() {
         {"", "so"},
         {"", "shortonly"},
         {"", "shortonly-dashed"},
+        {"", ""}
     };
-    Parser::Options par_opt = Parser::Options(options);
+
+    std::vector<std::string> params = {
+        "executable",         // [key]
+        "--long",             // long
+        "-l-d",               // long-dashed
+        "--longonly",         // longonly
+        "--longonly-dashed",  // longonly-dashed
+        "-s",                 // s
+        "-so"                 // so
+    };
+    std::vector<char *> argv;
+    for (const std::string &par : params) {
+        argv.push_back((char *)(par.data()));
+    }
+    argv.push_back(nullptr);
+
+    Parser::Options par_opt = Parser::Options(
+        argv.size() - 1, argv.data(), options
+    );
+
     std::unordered_map<std::string, int> par_map = par_opt.all_options();
 
-    for (const std::vector<std::string> opt : options) {
-        if (opt[0] != "") {
-            // first value is not empty, expect same-named key
-            assert (par_map[opt[0]] == 0);
-            assert (par_map.find(opt[1]) == par_map.end());
-        } else if (opt[1] != "" && opt[0] == "") {
-            // second value is not empty, expect same-named key
-            assert (par_map[opt[1]] == 0);
-            assert (par_map.find(opt[0]) == par_map.end());
-        } else if (opt[0] != "" && opt[1] != "") {
-            // both values are not empty, expect same-named key
-            // as the first value
-            assert (par_map[opt[0]] == 0);
-            assert (par_map.find(opt[1]) == par_map.end());
-        }
-    }
+    // --long
+    assert(par_map.find("long") != par_map.end());
+    assert(par_map.find("l") == par_map.end());
+    assert(par_map["long"] == 1);
+    assert(par_map["l"] == 0);
+
+    // --longonly
+    assert(par_map.find("longonly") != par_map.end());
+    assert(par_map.find("") == par_map.end());
+    assert(par_map["longonly"] == 1);
+    assert(par_map.count("") == 0);
+
+    // -l-d
+    assert(par_map.find("long-dashed") == par_map.end());
+    assert(par_map.find("l-d") != par_map.end());
+    assert(par_map["long-dashed"] == 0);
+    assert(par_map["l-d"] == 1);
+
+    // --longonly-dashed
+    assert(par_map.find("longonly-dashed") != par_map.end());
+    assert(par_map.find("") == par_map.end());
+    assert(par_map["longonly-dashed"] == 1);
+    assert(par_map.count("") == 0);
+
+    // -s
+    assert(par_map.find("") == par_map.end());
+    assert(par_map.find("s") != par_map.end());
+    assert(par_map.count("") == 0);
+    assert(par_map["s"] == 1);
+
+    // -so
+    assert(par_map.find("") == par_map.end());
+    assert(par_map.find("so") != par_map.end());
+    assert(par_map.count("") == 0);
+    assert(par_map["so"] == 1);
+
     return 0;
 }
