@@ -1,3 +1,11 @@
+/**
+ * Initialize Options class with 2-item sized arrays so that:
+ * - 1st: long option (--)
+ * - 2nd: short option (-)
+ *
+ * Note: The long option is always prioritized if there is both
+ * long + short available.
+ */
 #include <assert.h>
 
 #include "parser.h"
@@ -42,7 +50,7 @@ int main() {
     assert(par_map.find("long") != par_map.end());
     assert(par_map.find("l") == par_map.end());
     assert(par_map["long"] == 1);
-    assert(par_map["l"] == 0);
+    assert(par_map.count("l") == 0);
 
     // --longonly
     assert(par_map.find("longonly") != par_map.end());
@@ -53,7 +61,7 @@ int main() {
     // -l-d
     assert(par_map.find("long-dashed") == par_map.end());
     assert(par_map.find("l-d") != par_map.end());
-    assert(par_map["long-dashed"] == 0);
+    assert(par_map.count("long-dashed") == 0);
     assert(par_map["l-d"] == 1);
 
     // --longonly-dashed
