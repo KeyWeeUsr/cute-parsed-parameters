@@ -25,17 +25,32 @@ namespace Parser {
     }
 
     void Options::set_options(const int argc, char *argv[]) {
+        std::string opt_key;
         std::string value;
+        std::string short_par;
+        std::string long_par;
+        std::string short_sep = "-";
+        std::string long_sep = "--";
+        bool named = false;
+
         for (int i = 1; i < argc; i++) {
             value = static_cast<std::string>(argv[i]);
 
-            std::string short_par;
-            std::string long_par;
-            std::string short_sep = "-";
-            std::string long_sep = "--";
             for (int j = 0; j < Options::_keys.size(); j++) {
-                long_par = Options::_keys[j][0];
-                short_par = Options::_keys[j][1];
+                size_t opt_length = Options::_keys[j].size();
+
+                if (opt_length < 2 || opt_length > 3) {
+                    // ignore options with unhandled size
+                    continue;
+                } else if (opt_length == 3) {
+                    named = true;
+                    opt_key = Options::_keys[j][0];
+                    long_par = Options::_keys[j][1];
+                    short_par = Options::_keys[j][2];
+                } else if (opt_length == 2) {
+                    opt_key = long_par = Options::_keys[j][0];
+                    short_par = Options::_keys[j][1];
+                }
 
                 bool found_long = (
                     (long_par != "") && (value == long_sep + long_par)
@@ -43,14 +58,20 @@ namespace Parser {
                 bool found_short = (
                     (short_par != "") && (value == short_sep + short_par)
                 );
-                if (found_long && found_short) {
-                    Options::options[Options::_keys[j][0]] = 1;
-                } else if (found_long && !found_short) {
-                    Options::options[Options::_keys[j][0]] = 1;
-                } else if (!found_long && found_short) {
-                    Options::options[Options::_keys[j][1]] = 1;
-                } else if (!found_long && !found_short) {
-                    // nothing
+                if (!named) {
+                    if (found_long && found_short) {
+                        Options::options[long_par] = 1;
+                    } else if (found_long && !found_short) {
+                        Options::options[long_par] = 1;
+                    } else if (!found_long && found_short) {
+                        Options::options[short_par] = 1;
+                    } else if (!found_long && !found_short) {
+                        // nothing
+                    }
+                } else {
+                    if (found_long || found_short) {
+                        Options::options[opt_key] = 1;
+                    }
                 }
             }
         }
