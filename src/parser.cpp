@@ -78,8 +78,25 @@ namespace Parser {
 
     std::vector<std::string> Options::keys(void) {
         std::vector<std::string> result;
-        for (int i = 0; i < Options::_keys.size(); i++)
-            result.push_back(Options::_keys[i][0]);
+
+        for (std::vector<std::string> key : Options::_keys) {
+            size_t opt_length = key.size();
+
+            if (opt_length < 2 || opt_length > 3) {
+                // ignore options with unhandled size
+                continue;
+            } else if (opt_length == 3) {
+                // always use the name even if it'd be e.g. "" (empty string)
+                result.push_back(key[0]);
+            } else if (opt_length == 2) {
+                if (key[0] == "") {
+                    // use short-arg only if long is not present
+                    result.push_back(key[1]);
+                } else {
+                    result.push_back(key[0]);
+                }
+            }
+        }
         return result;
     }
 
