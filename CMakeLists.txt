@@ -46,3 +46,16 @@ test(setparametersempty)
 test(setparameters)
 test(setnamedparameters)
 test(longshortkeys)
+
+# documentation
+message("Checking for Doxygen executable")
+find_program(DOXYGEN doxygen)
+if(DOXYGEN)
+    message("Found Doxygen at: ${DOXYGEN}")
+    add_custom_command(
+        TARGET cutepp
+        POST_BUILD
+        COMMAND ${DOXYGEN}
+        BYPRODUCTS doc
+    )
+endif()
