@@ -52,24 +52,23 @@ namespace Parser {
                     short_par = Options::_keys[j][1];
                 }
 
-                bool found_long = (
-                    (long_par != "") && (value == long_sep + long_par)
+                bool has_long = long_par != "";
+                bool has_short = short_par != "";
+                bool found_long = has_long && (value == long_sep + long_par);
+                bool found_short = has_short && (
+                    value == short_sep + short_par
                 );
-                bool found_short = (
-                    (short_par != "") && (value == short_sep + short_par)
-                );
+                bool found_param = found_long || found_short;
                 if (!named) {
-                    if (found_long && found_short) {
+                    if (has_long && found_param) {
                         Options::options[long_par] = 1;
-                    } else if (found_long && !found_short) {
-                        Options::options[long_par] = 1;
-                    } else if (!found_long && found_short) {
+                    } else if (!has_long && has_short && found_param) {
                         Options::options[short_par] = 1;
-                    } else if (!found_long && !found_short) {
+                    } else if (!has_long && !has_short) {
                         // nothing
                     }
                 } else {
-                    if (found_long || found_short) {
+                    if (found_param) {
                         Options::options[opt_key] = 1;
                     }
                 }

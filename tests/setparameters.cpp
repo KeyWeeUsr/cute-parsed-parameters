@@ -59,10 +59,10 @@ int main() {
     assert(par_map.count("") == 0);
 
     // -l-d
-    assert(par_map.find("long-dashed") == par_map.end());
-    assert(par_map.find("l-d") != par_map.end());
-    assert(par_map.count("long-dashed") == 0);
-    assert(par_map["l-d"] == 1);
+    assert(par_map.find("long-dashed") != par_map.end());
+    assert(par_map.find("l-d") == par_map.end());
+    assert(par_map["long-dashed"] == 1);
+    assert(par_map.count("l-d") == 0);
 
     // --longonly-dashed
     assert(par_map.find("longonly-dashed") != par_map.end());
