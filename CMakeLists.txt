@@ -48,10 +48,18 @@ test(setnamedparameters)
 test(longshortkeys)
 
 # documentation
-message("Checking for Doxygen executable")
+message("Checking for Doxygen's 'doxygen' executable")
 find_program(DOXYGEN doxygen)
 if(DOXYGEN)
     message("Found Doxygen at: ${DOXYGEN}")
+endif()
+message("Checking for GraphViz's 'dot' executable")
+find_program(DOT dot)
+if(DOT)
+    message("Found Doxygen at: ${DOXYGEN}")
+endif()
+if(DOXYGEN AND DOT)
+    message("Adding post-build job for generating documentation")
     add_custom_command(
         TARGET cutepp
         POST_BUILD
